@@ -1,0 +1,8 @@
+min_range: 0.01
+beacon_range: 0.4
+beacon_radius: 0.05
+min_beacon_points: 5
+map_frame: map
+beacons_search_range: 2
+translation_weight: 1e3
+min_intens: 5000

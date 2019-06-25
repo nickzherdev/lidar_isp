@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="tf" type="static_transform_publisher" name="forward_lidar_tf_broadcaster" args="0.139 0 0 0 0 0 ump forward_lidar 100"/>
+
+    <param name="use_sim_time" value="true"/>
+    <node pkg="rosbag" name="player" type="play" args="-r 2 -s 40 --clock $(find particle_filter_localization)/bagfiles/2019-01-18-11-45-09.bag"/>
+
+    <node pkg="rviz" name="rviz" type="rviz" args="-d $(find particle_filter_localization)/config/pf.rviz"/>
+
+    <node pkg="particle_filter_localization" name="odom2tf" type="odom2tf.py" output="screen"/>
+
+    <node pkg="particle_filter_localization" name="beacons_detection_node" type="beacons_detection_node.py" output="screen">
+        <rosparam command="load" file="$(find particle_filter_localization)/config/beacons_detection_node_config.yaml" />
+        <remap from="scan" to="/lidars/forward_lidar/scan"/>
+    </node>
+
+    <node pkg="particle_filter_localization" name="pf_node" type="pf_node.py" output="screen">
+        <param name="global_beacons_file" value="$(find particle_filter_localization)/data/beacons.txt"/>
+    </node>
+</launch>
